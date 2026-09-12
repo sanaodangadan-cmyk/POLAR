@@ -1,150 +1,141 @@
-// ============================================
-// POLAROPS - FRONTEND JAVASCRIPT
-// ============================================
+function showSection(section, event) {
 
-
-// ============================================
-// SIDEBAR NAVIGATION
-// ============================================
-
-function showSection(section) {
-
-    // Remove active class from all buttons
     const buttons = document.querySelectorAll(".menu button");
 
     buttons.forEach(function(button) {
         button.classList.remove("active");
     });
 
+    if (event) {
+        const clickedButton = event.target.closest("button");
 
-    // Find the button that was clicked
-    const clickedButton = event.target.closest("button");
-
-    if (clickedButton) {
-        clickedButton.classList.add("active");
+        if (clickedButton) {
+            clickedButton.classList.add("active");
+        }
     }
 
-
-    // Show message according to selected section
-
     if (section === "dashboard") {
-
         console.log("Dashboard selected");
-
     }
 
     else if (section === "inventory") {
-
-        alert(
-            "📦 INVENTORY MANAGEMENT\n\n" +
-            "Fuel: 72%\n" +
-            "Food: 88%\n" +
-            "Medicine: 35%\n" +
-            "Oxygen: 25%\n\n" +
-            "⚠️ Some items require attention."
-        );
-
+        loadInventory();
     }
 
     else if (section === "cargo") {
-
-        alert(
-            "🚢 CARGO TRACKING\n\n" +
-            "C102 - Scientific Equipment\n" +
-            "Status: In Transit\n\n" +
-            "C103 - Medical Supplies\n" +
-            "Status: Delivered\n\n" +
-            "C104 - Fuel Containers\n" +
-            "Status: Delayed"
-        );
-
+        loadCargo();
     }
 
     else if (section === "emergency") {
-
-        emergencyAlert();
-
+        loadEmergency();
     }
 
     else if (section === "personnel") {
+        loadPersonnel();
+    }
+}
+
+
+async function loadInventory() {
+
+    try {
+        const response = await fetch(
+            "http://127.0.0.1:5000/api/inventory"
+        );
+
+        const data = await response.json();
+
+        alert(
+            "📦 INVENTORY FROM BACKEND\n\n" +
+            "Fuel: " + data.fuel + "%\n" +
+            "Food: " + data.food + "%\n" +
+            "Medicine: " + data.medicine + "%\n" +
+            "Oxygen: " + data.oxygen + "%"
+        );
+
+    } catch (error) {
+        console.error(error);
+        alert("❌ Backend connection failed!");
+    }
+}
+
+
+async function loadCargo() {
+
+    try {
+        const response = await fetch(
+            "http://127.0.0.1:5000/api/cargo"
+        );
+
+        const data = await response.json();
+
+        alert(
+            "🚢 CARGO TRACKING\n\n" +
+            data.map(function(cargo) {
+                return (
+                    cargo.cargo_id + " - " +
+                    cargo.item + "\n" +
+                    "Status: " + cargo.status
+                );
+            }).join("\n\n")
+        );
+
+    } catch (error) {
+        console.error(error);
+        alert("❌ Backend connection failed!");
+    }
+}
+
+
+async function loadPersonnel() {
+
+    try {
+        const response = await fetch(
+            "http://127.0.0.1:5000/api/personnel"
+        );
+
+        const data = await response.json();
 
         alert(
             "👥 PERSONNEL STATUS\n\n" +
-            "Total Personnel: 42\n" +
-            "Safe: 35\n" +
-            "Monitoring: 7\n" +
-            "Emergency: 0"
+            "Total: " + data.total + "\n" +
+            "Safe: " + data.safe + "\n" +
+            "Monitoring: " + data.monitoring + "\n" +
+            "Emergency: " + data.emergency
         );
 
+    } catch (error) {
+        console.error(error);
+        alert("❌ Backend connection failed!");
     }
 }
 
 
+async function loadEmergency() {
 
-// ============================================
-// EMERGENCY RESPONSE
-// ============================================
+    try {
+        const response = await fetch(
+            "http://127.0.0.1:5000/api/emergency"
+        );
 
-function emergencyAlert() {
-
-    const confirmResponse = confirm(
-        "🚨 HIGH RISK ALERT\n\n" +
-        "Severe weather detected in Research Zone C.\n\n" +
-        "Personnel affected: 6\n" +
-        "Nearest safe station: Station B\n\n" +
-        "Start emergency response?"
-    );
-
-
-    if (confirmResponse) {
+        const data = await response.json();
 
         alert(
-            "🚨 EMERGENCY RESPONSE STARTED\n\n" +
-            "✓ Personnel identified\n" +
-            "✓ Safe station identified\n" +
-            "✓ Nearby vehicle identified\n\n" +
+            "🚨 " + data.risk_level + " RISK\n\n" +
+            "Zone: " + data.zone + "\n" +
+            "Affected Personnel: " + data.affected_personnel + "\n" +
+            "Nearest Safe Station: " + data.nearest_safe_station + "\n\n" +
             "Recommended Action:\n" +
-            "Relocate personnel to Station B."
+            data.recommended_action
         );
 
-        console.log("Emergency response started.");
-
+    } catch (error) {
+        console.error(error);
+        alert("❌ Backend connection failed!");
     }
-
-    else {
-
-        console.log("Emergency response cancelled.");
-
-    }
-
 }
 
 
-
-// ============================================
-// DASHBOARD INITIALIZATION
-// ============================================
-
 document.addEventListener("DOMContentLoaded", function() {
-
-    console.log("=================================");
     console.log("POLAROPS SYSTEM INITIALIZED");
-    console.log("=================================");
-
-    console.log("Dashboard ready.");
-    console.log("Inventory module ready.");
-    console.log("Cargo module ready.");
-    console.log("Emergency module ready.");
-    console.log("Personnel module ready.");
-
 });
-
-  
- 
-
-
-
-
-
-
-
