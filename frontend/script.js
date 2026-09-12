@@ -1,3 +1,4 @@
+alert("NEW SCRIPT LOADED");
 function showSection(section, event) {
 
     const buttons = document.querySelectorAll(".menu button");
