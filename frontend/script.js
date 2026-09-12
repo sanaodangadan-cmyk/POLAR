@@ -7,25 +7,20 @@
 // SIDEBAR NAVIGATION
 // ============================================
 
-function showSection(section) {
+function showSection(section, event) {
 
-    // Remove active class from all buttons
     const buttons = document.querySelectorAll(".menu button");
 
     buttons.forEach(function(button) {
         button.classList.remove("active");
     });
 
-
-    // Find the button that was clicked
     const clickedButton = event.target.closest("button");
 
     if (clickedButton) {
         clickedButton.classList.add("active");
     }
 
-
-    // Show message according to selected section
 
     if (section === "dashboard") {
 
@@ -35,14 +30,7 @@ function showSection(section) {
 
     else if (section === "inventory") {
 
-        alert(
-            "📦 INVENTORY MANAGEMENT\n\n" +
-            "Fuel: 72%\n" +
-            "Food: 88%\n" +
-            "Medicine: 35%\n" +
-            "Oxygen: 25%\n\n" +
-            "⚠️ Some items require attention."
-        );
+        loadInventory();
 
     }
 
@@ -79,6 +67,41 @@ function showSection(section) {
     }
 }
 
+
+// ============================================
+// INVENTORY - BACKEND CONNECTION
+// ============================================
+
+async function loadInventory() {
+
+    try {
+
+        const response = await fetch(
+            "http://127.0.0.1:5000/api/inventory"
+        );
+
+        const data = await response.json();
+
+        console.log("Inventory data from backend:", data);
+
+        alert(
+            "📦 INVENTORY FROM BACKEND\n\n" +
+            "Fuel: " + data.fuel + "%\n" +
+            "Food: " + data.food + "%\n" +
+            "Medicine: " + data.medicine + "%\n" +
+            "Oxygen: " + data.oxygen + "%"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error("Backend connection failed:", error);
+
+        alert("❌ Backend connection failed!");
+
+    }
+}
 
 
 // ============================================
@@ -118,7 +141,6 @@ function emergencyAlert() {
     }
 
 }
-
 
 
 // ============================================
