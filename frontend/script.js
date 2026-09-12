@@ -6,7 +6,7 @@
 // ============================================
 // SIDEBAR NAVIGATION
 // ============================================
-
+alert("SCRIPT.JS IS WORKING!");
 function showSection(section, event) {
 
     const buttons = document.querySelectorAll(".menu button");
