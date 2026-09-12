@@ -1,12 +1,8 @@
-alert("SCRIPT.JS IS WORKING!");
 // ============================================
 // POLAROPS - FRONTEND JAVASCRIPT
 // ============================================
 
-
-// ============================================
 // SIDEBAR NAVIGATION
-// ============================================
 
 function showSection(section, event) {
 
@@ -16,12 +12,13 @@ function showSection(section, event) {
         button.classList.remove("active");
     });
 
-    const clickedButton = event.target.closest("button");
+    if (event) {
+        const clickedButton = event.target.closest("button");
 
-    if (clickedButton) {
-        clickedButton.classList.add("active");
+        if (clickedButton) {
+            clickedButton.classList.add("active");
+        }
     }
-
 
     if (section === "dashboard") {
 
@@ -83,8 +80,6 @@ async function loadInventory() {
 
         const data = await response.json();
 
-        console.log("Inventory data from backend:", data);
-
         alert(
             "📦 INVENTORY FROM BACKEND\n\n" +
             "Fuel: " + data.fuel + "%\n" +
@@ -97,7 +92,7 @@ async function loadInventory() {
 
     catch (error) {
 
-        console.error("Backend connection failed:", error);
+        console.error(error);
 
         alert("❌ Backend connection failed!");
 
@@ -119,25 +114,15 @@ function emergencyAlert() {
         "Start emergency response?"
     );
 
-
     if (confirmResponse) {
 
         alert(
             "🚨 EMERGENCY RESPONSE STARTED\n\n" +
             "✓ Personnel identified\n" +
-            "✓ Safe station identified\n" +
-            "✓ Nearby vehicle identified\n\n" +
+            "✓ Safe station identified\n\n" +
             "Recommended Action:\n" +
             "Relocate personnel to Station B."
         );
-
-        console.log("Emergency response started.");
-
-    }
-
-    else {
-
-        console.log("Emergency response cancelled.");
 
     }
 
@@ -145,19 +130,14 @@ function emergencyAlert() {
 
 
 // ============================================
-// DASHBOARD INITIALIZATION
+// SYSTEM INITIALIZATION
 // ============================================
 
 document.addEventListener("DOMContentLoaded", function() {
 
-    console.log("=================================");
     console.log("POLAROPS SYSTEM INITIALIZED");
-    console.log("=================================");
-
-    console.log("Dashboard ready.");
-    console.log("Inventory module ready.");
-    console.log("Cargo module ready.");
-    console.log("Emergency module ready.");
-    console.log("Personnel module ready.");
 
 });
+
+
+
