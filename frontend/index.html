@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PolarOps - Expedition Command Center</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #eef4f7;
+            color: #1b2b34;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 240px;
+            height: 100vh;
+            background: #102a43;
+            color: white;
+            padding: 25px 15px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            letter-spacing: 2px;
+        }
+
+        .logo p {
+            font-size: 12px;
+            color: #9ec5d6;
+            margin-top: 5px;
+        }
+
+        .menu button {
+            width: 100%;
+            padding: 14px;
+            margin: 6px 0;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: white;
+            text-align: left;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .menu button:hover,
+        .menu button.active {
+            background: #1d4e68;
+        }
+
+        /* MAIN */
+        .main {
+            margin-left: 240px;
+            padding: 25px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .topbar h2 {
+            font-size: 26px;
+        }
+
+        .status {
+            background: #d9f5e5;
+            color: #177245;
+            padding: 9px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        /* CARDS */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .card .icon {
+            font-size: 28px;
+        }
+
+        .card h3 {
+            margin-top: 12px;
+            color: #657786;
+            font-size: 14px;
+        }
+
+        .number {
+            font-size: 30px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        /* CONTENT GRID */
+        .content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 12px;
+            padding: 22px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .panel h2 {
+            margin-bottom: 18px;
+            font-size: 20px;
+        }
+
+        /* TABLE */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 13px 10px;
+            text-align: left;
+            border-bottom: 1px solid #e5e9ec;
+            font-size: 14px;
+        }
+
+        th {
+            color: #657786;
+            font-size: 13px;
+        }
+
+        .badge {
+            padding: 5px 9px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .green {
+            background: #d9f5e5;
+            color: #177245;
+        }
+
+        .yellow {
+            background: #fff3cd;
+            color: #8a6700;
+        }
+
+        .red {
+            background: #ffe0e0;
+            color: #b42318;
+        }
+
+        .blue {
+            background: #dceeff;
+            color: #175cd3;
+        }
+
+        /* ALERT */
+        .alert {
+            padding: 15px;
+            border-radius: 9px;
+            margin-bottom: 12px;
+        }
+
+        .alert.warning {
+            background: #fff5d6;
+            border-left: 5px solid #e6a700;
+        }
+
+        .alert.danger {
+            background: #ffe5e5;
+            border-left: 5px solid #d92d20;
+        }
+
+        .alert strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* INVENTORY */
+        .inventory-item {
+            margin-bottom: 18px;
+        }
+
+        .inventory-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 7px;
+            font-size: 14px;
+        }
+
+        .progress {
+            height: 9px;
+            background: #e5e9ec;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 10px;
+        }
+
+        .fuel {
+            width: 72%;
+            background: #2673a8;
+        }
+
+        .food {
+            width: 88%;
+            background: #2e8b57;
+        }
+
+        .medicine {
+            width: 35%;
+            background: #e0a800;
+        }
+
+        .oxygen {
+            width: 25%;
+            background: #d9534f;
+        }
+
+        /* RISK */
+        .risk-box {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background: #fff0f0;
+            border: 1px solid #f2b8b5;
+        }
+
+        .risk-level {
+            font-size: 28px;
+            font-weight: bold;
+            color: #c62828;
+            margin: 10px 0;
+        }
+
+        /* BUTTON */
+        .action-btn {
+            width: 100%;
+            padding: 12px;
+            margin-top: 12px;
+            border: none;
+            border-radius: 7px;
+            background: #145374;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .action-btn:hover {
+            background: #0d3c55;
+        }
+
+        /* RESPONSIVE */
+        @media(max-width: 900px) {
+
+            .sidebar {
+                width: 180px;
+            }
+
+            .main {
+                margin-left: 180px;
+            }
+
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width: 600px) {
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+
+    <div class="sidebar">
+
+        <div class="logo">
+            <h1>🧊 POLAROPS</h1>
+            <p>EXPEDITION COMMAND SYSTEM</p>
+        </div>
+
+        <div class="menu">
+
+            <button class="active" onclick="showSection('dashboard')">
+                🏠 Dashboard
+            </button>
+
+            <button onclick="showSection('inventory')">
+                📦 Inventory
+            </button>
+
+            <button onclick="showSection('cargo')">
+                🚢 Cargo Tracking
+            </button>
+
+            <button onclick="showSection('emergency')">
+                🚨 Emergency
+            </button>
+
+            <button onclick="showSection('personnel')">
+                👥 Personnel
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- MAIN CONTENT -->
+
+    <div class="main">
+
+        <div class="topbar">
+
+            <div>
+                <h2>Expedition Command Center</h2>
+                <p>Antarctic Expedition Alpha</p>
+            </div>
+
+            <div class="status">
+                ● SYSTEM OPERATIONAL
+            </div>
+
+        </div>
+
+
+        <!-- SUMMARY CARDS -->
+
+        <div class="cards">
+
+            <div class="card">
+                <div class="icon">👥</div>
+                <h3>PERSONNEL</h3>
+                <div class="number">42</div>
+            </div>
+
+            <div class="card">
+                <div class="icon">🚢</div>
+                <h3>CARGO IN TRANSIT</h3>
+                <div class="number">12</div>
+            </div>
+
+            <div class="card">
+                <div class="icon">📦</div>
+                <h3>INVENTORY ITEMS</h3>
+                <div class="number">86%</div>
+            </div>
+
+            <div class="card">
+                <div class="icon">🚨</div>
+                <h3>ACTIVE ALERTS</h3>
+                <div class="number">2</div>
+            </div>
+
+        </div>
+
+
+        <!-- CONTENT -->
+
+        <div class="content">
+
+            <div>
+
+                <!-- CARGO -->
+
+                <div class="panel">
+
+                    <h2>🚢 Cargo Tracking</h2>
+
+                    <table>
+
+                        <tr>
+                            <th>Cargo ID</th>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                        </tr>
+
+                        <tr>
+                            <td>C102</td>
+                            <td>Scientific Equipment</td>
+                            <td>10</td>
+                            <td>Transport Vehicle</td>
+                            <td>
+                                <span class="badge blue">
+                                    In Transit
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>C103</td>
+                            <td>Medical Supplies</td>
+                            <td>25</td>
+                            <td>Station B</td>
+                            <td>
+                                <span class="badge green">
+                                    Delivered
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>C104</td>
+                            <td>Fuel Containers</td>
+                            <td>30</td>
+                            <td>Ship</td>
+                            <td>
+                                <span class="badge red">
+                                    Delayed
+                                </span>
+                            </td>
+                        </tr>
+
+                    </table>
+
+                </div>
+
+
+                <!-- PERSONNEL -->
+
+                <div class="panel">
+
+                    <h2>👥 Personnel Status</h2>
+
+                    <table>
+
+                        <tr>
+                            <th>Name</th>
+                            <th>Role</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                        </tr>
+
+                        <tr>
+                            <td>Researcher A</td>
+                            <td>Scientist</td>
+                            <td>Station 1</td>
+                            <td>
+                                <span class="badge green">
+                                    Safe
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Researcher B</td>
+                            <td>Researcher</td>
+                            <td>Research Zone</td>
+                            <td>
+                                <span class="badge yellow">
+                                    Monitor
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Researcher C</td>
+                            <td>Engineer</td>
+                            <td>Transport Route</td>
+                            <td>
+                                <span class="badge green">
+                                    Safe
+                                </span>
+                            </td>
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+            <!-- RIGHT SIDE -->
+
+            <div>
+
+                <!-- ALERTS -->
+
+                <div class="panel">
+
+                    <h2>🚨 Alerts</h2>
+
+                    <div class="alert danger">
+
+                        <strong>Severe Weather Warning</strong>
+
+                        Research Zone C is currently at
+                        high risk.
+
+                    </div>
+
+                    <div class="alert warning">
+
+                        <strong>Fuel Stock Low</strong>
+
+                        Current stock may be insufficient
+                        within 6 days.
+
+                    </div>
+
+                </div>
+
+
+                <!-- INVENTORY -->
+
+                <div class="panel">
+
+                    <h2>📦 Inventory Status</h2>
+
+                    <div class="inventory-item">
+
+                        <div class="inventory-header">
+                            <span>Fuel</span>
+                            <span>72%</span>
+                        </div>
+
+                        <div class="progress">
+                            <div class="progress-bar fuel"></div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="inventory-item">
+
+                        <div class="inventory-header">
+                            <span>Food</span>
+                            <span>88%</span>
+                        </div>
+
+                        <div class="progress">
+                            <div class="progress-bar food"></div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="inventory-item">
+
+                        <div class="inventory-header">
+                            <span>Medicine</span>
+                            <span>35%</span>
+                        </div>
+
+                        <div class="progress">
+                            <div class="progress-bar medicine"></div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="inventory-item">
+
+                        <div class="inventory-header">
+                            <span>Oxygen</span>
+                            <span>25%</span>
+                        </div>
+
+                        <div class="progress">
+                            <div class="progress-bar oxygen"></div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- RISK -->
+
+                <div class="panel">
+
+                    <h2>🌨️ Expedition Risk</h2>
+
+                    <div class="risk-box">
+
+                        <div>Current Risk Level</div>
+
+                        <div class="risk-level">
+                            HIGH
+                        </div>
+
+                        <p>
+                            Severe weather detected in
+                            Research Zone C.
+                        </p>
+
+                        <button class="action-btn"
+                                onclick="emergencyAlert()">
+
+                            🚨 START RESPONSE
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- JAVASCRIPT -->
+
+    <script>
+
+        function showSection(section) {
+
+            if (section === "dashboard") {
+
+                alert("Dashboard selected");
+
+            }
+
+            else if (section === "inventory") {
+
+                alert("Inventory module selected");
+
+            }
+
+            else if (section === "cargo") {
+
+                alert("Cargo Tracking module selected");
+
+            }
+
+            else if (section === "emergency") {
+
+                emergencyAlert();
+
+            }
+
+            else if (section === "personnel") {
+
+                alert("Personnel module selected");
+
+            }
+
+        }
+
+
+        function emergencyAlert() {
+
+            alert(
+                "🚨 EMERGENCY RESPONSE\n\n" +
+                "Risk Level: HIGH\n" +
+                "Affected Zone: Research Zone C\n" +
+                "Personnel Affected: 6\n" +
+                "Nearest Safe Station: Station B\n\n" +
+                "Recommended Action:\n" +
+                "Relocate personnel to Station B."
+            );
+
+        }
+
+    </script>
+
+</body>
+</html>
